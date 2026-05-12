@@ -1,7 +1,10 @@
 use config::{Config, File};
 use log::error;
 use serde::{Deserialize, Serialize};
-use std::path::{Path, PathBuf};
+use std::{
+    path::{Path, PathBuf},
+    sync::Arc,
+};
 use wayvr_ipc::packet_client::WvrProcessLaunchParams;
 use wlx_common::{
     astr_containers::AStrMap,
@@ -156,6 +159,7 @@ pub struct AutoSettings {
     pub watch_view_angle_min: f32,
     pub watch_view_angle_max: f32,
     pub use_skybox: bool,
+    pub skybox_texture: Arc<str>,
     pub grid_opacity: f32,
     pub use_passthrough: bool,
     pub screen_render_down: bool,
@@ -210,6 +214,7 @@ pub fn save_settings(config: &GeneralConfig) -> anyhow::Result<()> {
         watch_view_angle_min: config.watch_view_angle_min,
         watch_view_angle_max: config.watch_view_angle_max,
         use_skybox: config.use_skybox,
+        skybox_texture: config.skybox_texture.clone(),
         grid_opacity: config.grid_opacity,
         use_passthrough: config.use_passthrough,
         screen_render_down: config.screen_render_down,

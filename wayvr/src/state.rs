@@ -90,7 +90,7 @@ impl AppState {
             .log_err("Could not initialize WayVR Server")
             .ok();
 
-        let mut hid_provider = HidWrapper::new();
+        let (hid_provider, mut hid_error) = HidWrapper::new();
 
         #[cfg(feature = "osc")]
         let osc_sender = crate::subsystem::osc::OscSender::new(session.config.osc_out_port).ok();
@@ -154,8 +154,9 @@ impl AppState {
         desktop_finder.refresh();
 
         let lang_provider = WayVRLangProvider::from_config(&session.config);
+        let executor = Rc::new(smol::LocalExecutor::new());
 
-        Ok(Self {
+        let mut app_state = Self {
             session,
             tasks,
             gfx,
@@ -188,7 +189,12 @@ impl AppState {
 
             #[cfg(feature = "openxr")]
             monado_state: None,
-        })
+        };
+
+        if let Some(error_toast) = hid_error {
+            error_toast.submit(&mut app_state);
+        }
+        Ok(app_state)
     }
 
     #[cfg(feature = "openxr")]

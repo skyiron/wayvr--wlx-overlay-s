@@ -1,6 +1,6 @@
 use crate::tab::settings::{
 	SettingType, SettingsMountParams, SettingsTab,
-	macros::{options_category, options_checkbox, options_range_f32, options_slider_f32},
+	macros::{options_category, options_checkbox, options_range_f32},
 };
 
 pub struct State {}
@@ -13,15 +13,6 @@ impl State {
 		options_checkbox(par.mp, c, SettingType::NotificationsEnabled)?;
 		options_checkbox(par.mp, c, SettingType::NotificationsSoundEnabled)?;
 		options_checkbox(par.mp, c, SettingType::KeyboardSoundEnabled)?;
-		if !par.feats.openxr || par.feats.monado {
-			// monado or openvr
-			options_checkbox(par.mp, c, SettingType::SpaceDragUnlocked)?;
-			options_slider_f32(par.mp, c, SettingType::SpaceDragMultiplier, -10.0, 10.0, 0.5)?;
-		}
-		if par.feats.monado {
-			// openvr can only ever rotate yaw
-			options_checkbox(par.mp, c, SettingType::SpaceRotateUnlocked)?;
-		}
 		if !par.feats.openxr || par.feats.monado {
 			// monado or openvr
 			options_checkbox(par.mp, c, SettingType::BlockGameInput)?;

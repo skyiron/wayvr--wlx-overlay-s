@@ -322,8 +322,10 @@ impl OverlayWindowConfig {
         let watch_normal = state.transform.transform_vector3a(Vec3A::NEG_Z).normalize();
         let dot = to_hmd.dot(watch_normal);
 
-        state.alpha = (dot - app.session.config.watch_view_angle_min)
-            / (app.session.config.watch_view_angle_max - app.session.config.watch_view_angle_min);
+        let range = (app.session.config.watch_view_angle_max
+            - app.session.config.watch_view_angle_min)
+            .max(0.01);
+        state.alpha = (dot - app.session.config.watch_view_angle_min) / range;
         state.alpha += 0.1;
         state.alpha = state.alpha.clamp(0., 1.);
     }
